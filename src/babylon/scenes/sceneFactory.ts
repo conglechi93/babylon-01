@@ -1,9 +1,9 @@
 import { Scene } from '@babylonjs/core';
 import type { Engine, Mesh } from '@babylonjs/core';
-import { ServiceType } from '../types/services';
-import type { ServiceDefinition } from '../types/services';
-import type { SelectionId } from '../types/selection';
-import { SERVICE_DEFINITIONS } from '../data/serviceDefinitions';
+import { ServiceType } from '../../types/services';
+import type { ServiceDefinition } from '../../types/services';
+import type { SelectionId } from '../../types/selection';
+import { SERVICE_DEFINITIONS } from '../../data/serviceDefinitions';
 import { setupCamera } from '../core/camera';
 import { setupLighting } from '../core/lighting';
 import { createGround } from '../meshCreators/ground';
