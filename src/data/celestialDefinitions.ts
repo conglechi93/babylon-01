@@ -74,6 +74,24 @@ export const CELESTIAL_DEFINITIONS: CelestialDefinition[] = [
   },
   {
     metadata: {
+      id: 'moon',
+      name: 'Moon',
+      type: CelestialType.Moon,
+      description:
+        "Earth's only natural satellite. Its gravitational pull causes ocean tides and stabilizes Earth's axial tilt.",
+      diameterKm: 3_474,
+      distanceAU: 0.00257,
+      orbitalPeriodYears: 0.0748,
+      moons: 0,
+    },
+    visualRadius: 0.15,
+    orbitRadius: 1.0,
+    orbitSpeed: 3.5,
+    color: '#AAAAAA',
+    orbitsPlanetId: 'earth',
+  },
+  {
+    metadata: {
       id: 'mars',
       name: 'Mars',
       type: CelestialType.Planet,

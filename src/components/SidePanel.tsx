@@ -1,4 +1,4 @@
-import { useSelection } from '../context/SelectionContext';
+import { useSelection } from '../context/useSelection';
 import type { ServiceMetadata } from '../types/services';
 import type { CelestialMetadata } from '../types/celestial';
 import styles from './SidePanel.module.css';

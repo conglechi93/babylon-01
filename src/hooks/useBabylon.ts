@@ -19,7 +19,9 @@ export function useBabylon(
 
   // Ref-forwarding: always use the latest callback without re-creating the scene
   const onSelectRef = useRef(options.onMeshSelected);
-  onSelectRef.current = options.onMeshSelected;
+  useEffect(() => {
+    onSelectRef.current = options.onMeshSelected;
+  });
 
   const getScene = useCallback(() => sceneRef.current, []);
 

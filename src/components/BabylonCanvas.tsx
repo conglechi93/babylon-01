@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useBabylon } from '../hooks/useBabylon';
-import { useSelection } from '../context/SelectionContext';
+import { useSelection } from '../context/useSelection';
 
 interface BabylonCanvasProps {
   onGetScene?: (getScene: () => ReturnType<typeof useBabylon>['getScene']) => void;

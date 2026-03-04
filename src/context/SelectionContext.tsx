@@ -1,16 +1,9 @@
-import { createContext, useContext, useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { SelectionId, SelectedEntity } from '../types/selection';
 import { SERVICE_DEFINITIONS } from '../data/serviceDefinitions';
 import { CELESTIAL_DEFINITIONS } from '../data/celestialDefinitions';
-
-interface SelectionState {
-  selectionId: SelectionId;
-  selectedEntity: SelectedEntity;
-  setSelectionId: (id: SelectionId) => void;
-}
-
-const SelectionContext = createContext<SelectionState | null>(null);
+import { SelectionContext } from './selectionContextCore';
 
 export function SelectionProvider({ children }: { children: ReactNode }) {
   const [selectionId, setSelectionIdRaw] = useState<SelectionId>(null);
@@ -35,10 +28,4 @@ export function SelectionProvider({ children }: { children: ReactNode }) {
   );
 
   return <SelectionContext value={value}>{children}</SelectionContext>;
-}
-
-export function useSelection(): SelectionState {
-  const ctx = useContext(SelectionContext);
-  if (!ctx) throw new Error('useSelection must be used within SelectionProvider');
-  return ctx;
 }

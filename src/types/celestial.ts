@@ -1,6 +1,7 @@
 export const CelestialType = {
   Star: 'Star',
   Planet: 'Planet',
+  Moon: 'Moon',
 } as const;
 
 export type CelestialType = (typeof CelestialType)[keyof typeof CelestialType];
@@ -23,4 +24,5 @@ export interface CelestialDefinition {
   orbitSpeed: number;
   color: string;
   hasRings?: boolean;
+  orbitsPlanetId?: string;
 }
