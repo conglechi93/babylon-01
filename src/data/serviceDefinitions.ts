@@ -1,0 +1,91 @@
+import { ServiceType } from '../types/services';
+import type { ServiceDefinition } from '../types/services';
+
+export const SERVICE_DEFINITIONS: ServiceDefinition[] = [
+  {
+    metadata: {
+      id: 'api-gateway',
+      name: 'API Gateway',
+      type: ServiceType.Microservice,
+      description: 'Central entry point for all client requests. Handles routing, rate limiting, and authentication delegation.',
+      technology: 'Node.js / Express',
+      port: 3000,
+      dependencies: ['auth-service', 'user-service', 'order-service'],
+      status: 'healthy',
+    },
+    position: { x: 0, y: 1, z: 0 },
+    color: '#4FC3F7',
+  },
+  {
+    metadata: {
+      id: 'auth-service',
+      name: 'Auth Service',
+      type: ServiceType.Microservice,
+      description: 'Manages user authentication and authorization. Issues and validates JWT tokens.',
+      technology: 'Go',
+      port: 3001,
+      dependencies: ['postgres-db'],
+      status: 'healthy',
+    },
+    position: { x: -3, y: 1, z: -2 },
+    color: '#81C784',
+  },
+  {
+    metadata: {
+      id: 'user-service',
+      name: 'User Service',
+      type: ServiceType.Microservice,
+      description: 'Handles user profile management, preferences, and account operations.',
+      technology: 'Python / FastAPI',
+      port: 3002,
+      dependencies: ['postgres-db', 'rabbitmq-bus'],
+      status: 'healthy',
+    },
+    position: { x: 3, y: 1, z: -2 },
+    color: '#FFB74D',
+  },
+  {
+    metadata: {
+      id: 'order-service',
+      name: 'Order Service',
+      type: ServiceType.Microservice,
+      description: 'Processes orders, manages inventory reservations, and handles payment orchestration.',
+      technology: 'Java / Spring Boot',
+      port: 3003,
+      dependencies: ['postgres-db', 'rabbitmq-bus'],
+      status: 'degraded',
+    },
+    position: { x: 0, y: 1, z: -4 },
+    color: '#E57373',
+  },
+  {
+    metadata: {
+      id: 'postgres-db',
+      name: 'PostgreSQL DB',
+      type: ServiceType.Database,
+      description: 'Primary relational database storing user accounts, orders, sessions, and application state.',
+      technology: 'PostgreSQL 16',
+      port: 5432,
+      dependencies: [],
+      status: 'healthy',
+    },
+    position: { x: -2, y: 0.75, z: -6 },
+    color: '#9575CD',
+    dimensions: { diameter: 1.5, height: 1.5 },
+  },
+  {
+    metadata: {
+      id: 'rabbitmq-bus',
+      name: 'RabbitMQ Event Bus',
+      type: ServiceType.MessageQueue,
+      description: 'Asynchronous message broker for event-driven communication between services.',
+      technology: 'RabbitMQ 3.13',
+      port: 5672,
+      dependencies: [],
+      status: 'healthy',
+    },
+    position: { x: 2, y: 1, z: -6 },
+    color: '#F06292',
+    dimensions: { diameter: 1.2 },
+  },
+];
