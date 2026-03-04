@@ -27,8 +27,9 @@ export function createPlanet(
     { diameter: def.visualRadius * 2, segments: 24 },
     scene,
   );
-  // Position relative to pivot (orbit radius along X)
-  sphere.position.set(def.orbitRadius, def.visualRadius, 0);
+  // Lift planets with rings high enough so the ring doesn't clip the ground
+  const yOffset = def.hasRings ? def.visualRadius * 3.5 : def.visualRadius;
+  sphere.position.set(def.orbitRadius, yOffset, 0);
   sphere.parent = pivot;
 
   const mat = new StandardMaterial(`${def.metadata.id}-mat`, scene);

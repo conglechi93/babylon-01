@@ -12,7 +12,7 @@ export function setupCamera(scene: Scene, canvas: HTMLCanvasElement): ArcRotateC
   );
   camera.attachControl(canvas, false);
   camera.lowerRadiusLimit = 5;
-  camera.upperRadiusLimit = 80;
+  camera.upperRadiusLimit = 100;
   camera.inertia = 0.85;
   camera.wheelDeltaPercentage = 0.06;
   return camera;
