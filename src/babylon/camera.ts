@@ -6,14 +6,14 @@ export function setupCamera(scene: Scene, canvas: HTMLCanvasElement): ArcRotateC
     'camera',
     -Math.PI / 2,
     Math.PI / 3,
-    15,
-    new Vector3(0, 0, -2),
+    35,
+    new Vector3(15, 0, -2),
     scene,
   );
-  camera.attachControl(canvas, true);
+  camera.attachControl(canvas, false);
   camera.lowerRadiusLimit = 5;
-  camera.upperRadiusLimit = 30;
+  camera.upperRadiusLimit = 80;
   camera.inertia = 0.85;
-  camera.wheelDeltaPercentage = 0.01;
+  camera.wheelDeltaPercentage = 0.06;
   return camera;
 }

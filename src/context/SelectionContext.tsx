@@ -1,31 +1,37 @@
 import { createContext, useContext, useState, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
-import type { ServiceMetadata } from '../types/services';
+import type { SelectionId, SelectedEntity } from '../types/selection';
 import { SERVICE_DEFINITIONS } from '../data/serviceDefinitions';
+import { CELESTIAL_DEFINITIONS } from '../data/celestialDefinitions';
 
 interface SelectionState {
-  selectedServiceId: string | null;
-  selectedService: ServiceMetadata | null;
-  setSelectedServiceId: (id: string | null) => void;
+  selectionId: SelectionId;
+  selectedEntity: SelectedEntity;
+  setSelectionId: (id: SelectionId) => void;
 }
 
 const SelectionContext = createContext<SelectionState | null>(null);
 
 export function SelectionProvider({ children }: { children: ReactNode }) {
-  const [selectedServiceId, setSelectedServiceIdRaw] = useState<string | null>(null);
+  const [selectionId, setSelectionIdRaw] = useState<SelectionId>(null);
 
-  const setSelectedServiceId = useCallback((id: string | null) => {
-    setSelectedServiceIdRaw(id);
+  const setSelectionId = useCallback((id: SelectionId) => {
+    setSelectionIdRaw(id);
   }, []);
 
-  const selectedService = useMemo(() => {
-    if (!selectedServiceId) return null;
-    return SERVICE_DEFINITIONS.find((d) => d.metadata.id === selectedServiceId)?.metadata ?? null;
-  }, [selectedServiceId]);
+  const selectedEntity: SelectedEntity = useMemo(() => {
+    if (!selectionId) return null;
+    if (selectionId.kind === 'service') {
+      const def = SERVICE_DEFINITIONS.find((d) => d.metadata.id === selectionId.id);
+      return def ? { kind: 'service', data: def.metadata } : null;
+    }
+    const def = CELESTIAL_DEFINITIONS.find((d) => d.metadata.id === selectionId.id);
+    return def ? { kind: 'celestial', data: def.metadata } : null;
+  }, [selectionId]);
 
   const value = useMemo(
-    () => ({ selectedServiceId, selectedService, setSelectedServiceId }),
-    [selectedServiceId, selectedService, setSelectedServiceId],
+    () => ({ selectionId, selectedEntity, setSelectionId }),
+    [selectionId, selectedEntity, setSelectionId],
   );
 
   return <SelectionContext value={value}>{children}</SelectionContext>;

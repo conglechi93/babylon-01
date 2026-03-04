@@ -8,10 +8,10 @@ interface BabylonCanvasProps {
 
 export function BabylonCanvas({ onGetScene }: BabylonCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { setSelectedServiceId } = useSelection();
+  const { setSelectionId } = useSelection();
 
   const { getScene } = useBabylon(canvasRef, {
-    onMeshSelected: setSelectedServiceId,
+    onMeshSelected: setSelectionId,
   });
 
   // Expose getScene to parent for inspector toggle

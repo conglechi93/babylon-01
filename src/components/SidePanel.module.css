@@ -58,6 +58,11 @@
   color: #ffcdd2;
 }
 
+.badgeCelestial {
+  background: #1565c0;
+  color: #bbdefb;
+}
+
 .section {
   margin-top: 20px;
 }

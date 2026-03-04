@@ -2,6 +2,7 @@ import { Scene } from '@babylonjs/core';
 import type { Engine, Mesh } from '@babylonjs/core';
 import { ServiceType } from '../types/services';
 import type { ServiceDefinition } from '../types/services';
+import type { SelectionId } from '../types/selection';
 import { SERVICE_DEFINITIONS } from '../data/serviceDefinitions';
 import { setupCamera } from './camera';
 import { setupLighting } from './lighting';
@@ -12,6 +13,7 @@ import { createMessageQueueTorus } from './meshCreators/messageQueueTorus';
 import { HighlightManager } from './interactions/highlight';
 import { setupRayPicking } from './interactions/rayPicking';
 import { setupIdleRotation } from './animations/rotation';
+import { createSolarSystem } from './solarSystemFactory';
 
 function createMeshForService(def: ServiceDefinition, scene: Scene): Mesh {
   switch (def.metadata.type) {
@@ -33,7 +35,7 @@ export interface SceneResult {
 export function createScene(
   engine: Engine,
   canvas: HTMLCanvasElement,
-  onSelect: (serviceId: string | null) => void,
+  onSelect: (selectionId: SelectionId) => void,
 ): SceneResult {
   const scene = new Scene(engine);
   scene.clearColor.set(0.08, 0.08, 0.12, 1);
@@ -46,8 +48,13 @@ export function createScene(
     createMeshForService(def, scene),
   );
 
+  // Create solar system
+  const { pickableMeshes: solarMeshes } = createSolarSystem(scene);
+
+  const allPickableMeshes = [...serviceMeshes, ...solarMeshes];
+
   const highlightManager = new HighlightManager(scene);
-  setupRayPicking(scene, serviceMeshes, highlightManager, onSelect);
+  setupRayPicking(scene, allPickableMeshes, highlightManager, onSelect);
   setupIdleRotation(scene, serviceMeshes);
 
   return { scene, highlightManager };

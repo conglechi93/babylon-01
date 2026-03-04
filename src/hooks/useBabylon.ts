@@ -1,11 +1,12 @@
 import { useEffect, useRef, useCallback } from 'react';
 import type { Engine, Scene } from '@babylonjs/core';
 import type { HighlightManager } from '../babylon/interactions/highlight';
+import type { SelectionId } from '../types/selection';
 import { createEngine } from '../babylon/engine';
 import { createScene } from '../babylon/sceneFactory';
 
 interface UseBabylonOptions {
-  onMeshSelected: (serviceId: string | null) => void;
+  onMeshSelected: (selectionId: SelectionId) => void;
 }
 
 export function useBabylon(
@@ -29,8 +30,8 @@ export function useBabylon(
     const engine = createEngine(canvas);
     engineRef.current = engine;
 
-    const { scene, highlightManager } = createScene(engine, canvas, (serviceId) => {
-      onSelectRef.current(serviceId);
+    const { scene, highlightManager } = createScene(engine, canvas, (selectionId) => {
+      onSelectRef.current(selectionId);
     });
     sceneRef.current = scene;
     highlightRef.current = highlightManager;
