@@ -11,6 +11,14 @@ export const MeshShape = {
 
 export type MeshShape = (typeof MeshShape)[keyof typeof MeshShape];
 
+export interface MeshAnimation {
+  rotationY?: number;  // rad/s
+  rotationX?: number;  // rad/s
+  rotationZ?: number;  // rad/s
+  bobY?: number;       // amplitude (units)
+  bobSpeed?: number;   // frequency (Hz)
+}
+
 export interface MeshMetadata {
   id: string;
   name: string;
@@ -18,4 +26,5 @@ export interface MeshMetadata {
   color: string;
   dimensions: Record<string, number>;
   position: { x: number; y: number; z: number };
+  animation?: MeshAnimation;
 }

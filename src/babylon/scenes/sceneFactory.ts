@@ -8,8 +8,8 @@ import { createGround } from '../meshCreators/ground';
 import { createPrimitiveMesh } from '../meshCreators/primitiveMesh';
 import { HighlightManager } from '../interactions/highlight';
 import { setupRayPicking } from '../interactions/rayPicking';
-import { setupIdleRotation } from '../animations/rotation';
-import { createSolarSystem } from './solarSystemFactory';
+import { setupMeshAnimations } from '../animations/rotation';
+import { createSolarSystem } from '../meshCreators/solarSystem';
 
 export interface SceneResult {
   scene: Scene;
@@ -38,7 +38,7 @@ export function createScene(
 
   const highlightManager = new HighlightManager(scene);
   setupRayPicking(scene, allPickableMeshes, highlightManager, onSelect);
-  setupIdleRotation(scene, primitiveMeshes);
+  setupMeshAnimations(scene, primitiveMeshes, MESH_DEFINITIONS);
 
   return { scene, highlightManager };
 }

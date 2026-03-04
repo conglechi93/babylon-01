@@ -9,6 +9,7 @@ export const MESH_DEFINITIONS: MeshMetadata[] = [
     color: '#4FC3F7',
     dimensions: { width: 1.2, height: 1.2, depth: 1.2 },
     position: { x: 0, y: 1, z: 0 },
+    animation: { rotationY: 0.5, rotationX: 0.3 },
   },
   {
     id: 'sphere-1',
@@ -17,6 +18,7 @@ export const MESH_DEFINITIONS: MeshMetadata[] = [
     color: '#81C784',
     dimensions: { diameter: 1.2, segments: 24 },
     position: { x: -3, y: 1, z: -2 },
+    animation: { bobY: 0.4, bobSpeed: 1.2 },
   },
   {
     id: 'cylinder-1',
@@ -25,6 +27,7 @@ export const MESH_DEFINITIONS: MeshMetadata[] = [
     color: '#9575CD',
     dimensions: { diameter: 1.2, height: 1.8, tessellation: 24 },
     position: { x: 3, y: 1, z: -2 },
+    animation: { rotationY: 0.8 },
   },
   {
     id: 'torus-1',
@@ -33,6 +36,7 @@ export const MESH_DEFINITIONS: MeshMetadata[] = [
     color: '#F06292',
     dimensions: { diameter: 1.4, thickness: 0.4, tessellation: 32 },
     position: { x: 0, y: 1, z: -4 },
+    animation: { rotationX: 1.0, rotationY: 0.4 },
   },
   {
     id: 'capsule-1',
@@ -41,6 +45,7 @@ export const MESH_DEFINITIONS: MeshMetadata[] = [
     color: '#FFB74D',
     dimensions: { radius: 0.5, height: 2.0, subdivisions: 2 },
     position: { x: -3, y: 1.2, z: -5 },
+    animation: { bobY: 0.3, bobSpeed: 0.8, rotationY: 0.3 },
   },
   {
     id: 'cone-1',
@@ -49,6 +54,7 @@ export const MESH_DEFINITIONS: MeshMetadata[] = [
     color: '#E57373',
     dimensions: { diameterBottom: 1.4, diameterTop: 0, height: 1.8, tessellation: 24 },
     position: { x: 3, y: 1, z: -5 },
+    animation: { rotationY: -0.6, rotationZ: 0.2 },
   },
   {
     id: 'disc-1',
@@ -56,6 +62,7 @@ export const MESH_DEFINITIONS: MeshMetadata[] = [
     shape: MeshShape.Disc,
     color: '#4DB6AC',
     dimensions: { radius: 0.8, tessellation: 32 },
-    position: { x: 0, y: 0.05, z: -7 },
+    position: { x: 0, y: 0.5, z: -7 },
+    animation: { rotationZ: 1.2, bobY: 0.2, bobSpeed: 1.5 },
   },
 ];

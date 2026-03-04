@@ -1,9 +1,9 @@
 import type { Scene, Mesh } from '@babylonjs/core';
 import { CelestialType } from '../../types/celestial';
 import { CELESTIAL_DEFINITIONS, SOLAR_SYSTEM_OFFSET_X } from '../../data/celestialDefinitions';
-import { createSun } from '../meshCreators/sun';
-import { createPlanet } from '../meshCreators/planet';
-import { createSolarGround } from '../meshCreators/solarGround';
+import { createSun } from './sun';
+import { createPlanet } from './planet';
+import { createSolarGround } from './solarGround';
 import { setupOrbitalMotion } from '../animations/orbit';
 import type { TransformNode } from '@babylonjs/core';
 
