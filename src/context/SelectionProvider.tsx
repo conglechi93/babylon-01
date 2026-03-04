@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { SelectionId, SelectedEntity } from '../types/selection';
-import { SERVICE_DEFINITIONS } from '../data/serviceDefinitions';
+import { MESH_DEFINITIONS } from '../data/meshDefinitions';
 import { CELESTIAL_DEFINITIONS } from '../data/celestialDefinitions';
 import { SelectionContext } from './SelectionContext';
 
@@ -14,9 +14,9 @@ export function SelectionProvider({ children }: { children: ReactNode }) {
 
   const selectedEntity: SelectedEntity = useMemo(() => {
     if (!selectionId) return null;
-    if (selectionId.kind === 'service') {
-      const def = SERVICE_DEFINITIONS.find((d) => d.metadata.id === selectionId.id);
-      return def ? { kind: 'service', data: def.metadata } : null;
+    if (selectionId.kind === 'mesh') {
+      const def = MESH_DEFINITIONS.find((d) => d.id === selectionId.id);
+      return def ? { kind: 'mesh', data: def } : null;
     }
     const def = CELESTIAL_DEFINITIONS.find((d) => d.metadata.id === selectionId.id);
     return def ? { kind: 'celestial', data: def.metadata } : null;

@@ -4,8 +4,8 @@ import type { HighlightManager } from './highlight';
 import type { SelectionId } from '../../types/selection';
 
 function selectionIdFromMesh(mesh: AbstractMesh): SelectionId {
-  if (mesh.metadata?.serviceId) {
-    return { kind: 'service', id: mesh.metadata.serviceId };
+  if (mesh.metadata?.meshId) {
+    return { kind: 'mesh', id: mesh.metadata.meshId };
   }
   if (mesh.metadata?.celestialId) {
     return { kind: 'celestial', id: mesh.metadata.celestialId };

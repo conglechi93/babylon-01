@@ -1,52 +1,34 @@
 import { useState } from 'react';
 import { useSelection } from '../context/useSelection';
-import type { ServiceMetadata } from '../types/services';
+import type { MeshMetadata } from '../types/mesh';
 import type { CelestialMetadata } from '../types/celestial';
 import styles from './SidePanel.module.css';
 
-function ServicePanel({ service }: { service: ServiceMetadata }) {
-  const statusClass =
-    service.status === 'healthy'
-      ? styles.statusHealthy
-      : service.status === 'degraded'
-        ? styles.statusDegraded
-        : styles.statusDown;
-
+function MeshPanel({ mesh }: { mesh: MeshMetadata }) {
   return (
     <>
-      <h2 className={styles.name}>{service.name}</h2>
-      <span className={`${styles.badge} ${statusClass}`}>{service.status}</span>
+      <h2 className={styles.name}>{mesh.name}</h2>
+      <span className={`${styles.badge} ${styles.badgeMesh}`}>{mesh.shape}</span>
 
       <div className={styles.section}>
-        <label>Type</label>
-        <p>{service.type}</p>
+        <label>Color</label>
+        <p>
+          <span className={styles.colorSwatch} style={{ background: mesh.color }} />
+          {mesh.color}
+        </p>
       </div>
 
       <div className={styles.section}>
-        <label>Technology</label>
-        <p>{service.technology}</p>
+        <label>Dimensions</label>
+        {Object.entries(mesh.dimensions).map(([key, val]) => (
+          <p key={key}>{key}: {val}</p>
+        ))}
       </div>
 
       <div className={styles.section}>
-        <label>Port</label>
-        <p>{service.port}</p>
+        <label>Position</label>
+        <p>x: {mesh.position.x}, y: {mesh.position.y}, z: {mesh.position.z}</p>
       </div>
-
-      <div className={styles.section}>
-        <label>Description</label>
-        <p>{service.description}</p>
-      </div>
-
-      {service.dependencies.length > 0 && (
-        <div className={styles.section}>
-          <label>Dependencies</label>
-          <ul className={styles.deps}>
-            {service.dependencies.map((dep) => (
-              <li key={dep}>{dep}</li>
-            ))}
-          </ul>
-        </div>
-      )}
     </>
   );
 }
@@ -102,11 +84,11 @@ export function SidePanel() {
         <>
           {!selectedEntity ? (
             <div className={styles.placeholder}>
-              <h2>Architecture Viewer</h2>
-              <p>Click on a service or celestial body in the 3D scene to view its details.</p>
+              <h2>Scene Viewer</h2>
+              <p>Click on a mesh or celestial body to view its details.</p>
             </div>
-          ) : selectedEntity.kind === 'service' ? (
-            <ServicePanel service={selectedEntity.data} />
+          ) : selectedEntity.kind === 'mesh' ? (
+            <MeshPanel mesh={selectedEntity.data} />
           ) : (
             <CelestialPanel body={selectedEntity.data} />
           )}
