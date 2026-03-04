@@ -1,6 +1,5 @@
-import { Scene } from '@babylonjs/core/scene.js';
-import type { Engine } from '@babylonjs/core/Engines/engine.js';
-import type { Mesh } from '@babylonjs/core/Meshes/mesh.js';
+import { Scene } from '@babylonjs/core';
+import type { Engine, Mesh } from '@babylonjs/core';
 import { ServiceType } from '../types/services';
 import type { ServiceDefinition } from '../types/services';
 import { SERVICE_DEFINITIONS } from '../data/serviceDefinitions';

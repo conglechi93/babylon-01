@@ -1,8 +1,5 @@
-import '@babylonjs/core/Layers/effectLayerSceneComponent.js';
-import { HighlightLayer } from '@babylonjs/core/Layers/highlightLayer.js';
-import { Color3 } from '@babylonjs/core/Maths/math.color.js';
-import type { Scene } from '@babylonjs/core/scene.js';
-import type { Mesh } from '@babylonjs/core/Meshes/mesh.js';
+import { HighlightLayer, Color3 } from '@babylonjs/core';
+import type { Scene, Mesh } from '@babylonjs/core';
 
 export class HighlightManager {
   private layer: HighlightLayer;

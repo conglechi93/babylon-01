@@ -1,5 +1,4 @@
-import type { Scene } from '@babylonjs/core/scene.js';
-import type { Mesh } from '@babylonjs/core/Meshes/mesh.js';
+import type { Scene, Mesh } from '@babylonjs/core';
 
 export function setupIdleRotation(scene: Scene, meshes: Mesh[]): void {
   scene.registerBeforeRender(() => {

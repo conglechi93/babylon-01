@@ -1,8 +1,5 @@
-import { CreateCylinder } from '@babylonjs/core/Meshes/Builders/cylinderBuilder.js';
-import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial.js';
-import { Color3 } from '@babylonjs/core/Maths/math.color.js';
-import type { Scene } from '@babylonjs/core/scene.js';
-import type { Mesh } from '@babylonjs/core/Meshes/mesh.js';
+import { CreateCylinder, StandardMaterial, Color3 } from '@babylonjs/core';
+import type { Scene, Mesh } from '@babylonjs/core';
 import type { ServiceDefinition } from '../../types/services';
 
 export function createDatabaseCylinder(def: ServiceDefinition, scene: Scene): Mesh {

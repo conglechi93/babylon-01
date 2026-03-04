@@ -1,73 +1,83 @@
-# React + TypeScript + Vite
+# 3D Interactive System Architecture Viewer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A 3D visualization of a microservices architecture built with React, TypeScript, and BabylonJS. Click on 3D mesh representations of services to see details in a side panel.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Vite 7** + **React 19** + **TypeScript 5.9**
+- **@babylonjs/core** + **@babylonjs/inspector** (lazy-loaded)
+- CSS Modules
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js >= 22 (see `.nvmrc`)
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+nvm use          # switch to Node 22
+npm install
+npm run dev      # start dev server at http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Build
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build    # type-check + production build → dist/
+npm run preview  # preview the production build
 ```
+
+## Project Structure
+
+```
+src/
+├── types/services.ts              # ServiceType, ServiceMetadata, ServiceDefinition
+├── data/serviceDefinitions.ts     # 6 static service definitions
+├── babylon/                       # BabylonJS layer (pure functions, no React)
+│   ├── engine.ts                  # Engine with stencil: true
+│   ├── sceneFactory.ts            # Orchestrates scene setup
+│   ├── camera.ts                  # ArcRotateCamera (zoom 5–30)
+│   ├── lighting.ts                # HemisphericLight
+│   ├── meshCreators/
+│   │   ├── ground.ts              # Non-pickable ground plane
+│   │   ├── serviceBox.ts          # Box → Microservice
+│   │   ├── databaseCylinder.ts    # Cylinder → Database
+│   │   └── messageQueueTorus.ts   # Torus → Message Queue
+│   ├── interactions/
+│   │   ├── highlight.ts           # HighlightLayer glow on selection
+│   │   └── rayPicking.ts          # Click handlers via ActionManager
+│   └── animations/
+│       └── rotation.ts            # Slow Y-axis idle spin
+├── hooks/
+│   ├── useBabylon.ts              # Engine/scene lifecycle + ref-forwarding
+│   └── useInspector.ts            # Lazy-load BabylonJS Inspector
+├── context/
+│   └── SelectionContext.tsx        # Selected service state
+├── components/
+│   ├── BabylonCanvas.tsx           # <canvas> + useBabylon
+│   ├── SidePanel.tsx               # Service details panel
+│   └── Toolbar.tsx                 # Inspector toggle
+├── App.tsx                         # Layout: viewport + side panel
+├── main.tsx                        # Entry point
+├── index.css                       # Global reset
+└── App.css                         # Layout styles
+```
+
+## Services
+
+| Service            | Shape    | Color  | Status  |
+|--------------------|----------|--------|---------|
+| API Gateway        | Box      | Blue   | Healthy |
+| Auth Service       | Box      | Green  | Healthy |
+| User Service       | Box      | Orange | Healthy |
+| Order Service      | Box      | Red    | Degraded|
+| PostgreSQL DB      | Cylinder | Purple | Healthy |
+| RabbitMQ Event Bus | Torus    | Pink   | Healthy |
+
+## Usage
+
+- **Orbit**: drag with mouse
+- **Zoom**: scroll (limited 5–30 units)
+- **Select service**: click a mesh → white glow + details in side panel
+- **Deselect**: click empty space
+- **Inspector**: click "Show Inspector" button (top-left)

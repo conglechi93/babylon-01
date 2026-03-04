@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { Scene } from '@babylonjs/core/scene.js';
+import type { Scene } from '@babylonjs/core';
 
 export function useInspector(getScene: () => Scene | null) {
   const [visible, setVisible] = useState(false);

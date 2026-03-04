@@ -1,6 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
-import type { Engine } from '@babylonjs/core/Engines/engine.js';
-import type { Scene } from '@babylonjs/core/scene.js';
+import type { Engine, Scene } from '@babylonjs/core';
 import type { HighlightManager } from '../babylon/interactions/highlight';
 import { createEngine } from '../babylon/engine';
 import { createScene } from '../babylon/sceneFactory';

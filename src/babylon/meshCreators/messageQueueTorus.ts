@@ -1,8 +1,5 @@
-import { CreateTorus } from '@babylonjs/core/Meshes/Builders/torusBuilder.js';
-import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial.js';
-import { Color3 } from '@babylonjs/core/Maths/math.color.js';
-import type { Scene } from '@babylonjs/core/scene.js';
-import type { Mesh } from '@babylonjs/core/Meshes/mesh.js';
+import { CreateTorus, StandardMaterial, Color3 } from '@babylonjs/core';
+import type { Scene, Mesh } from '@babylonjs/core';
 import type { ServiceDefinition } from '../../types/services';
 
 export function createMessageQueueTorus(def: ServiceDefinition, scene: Scene): Mesh {
