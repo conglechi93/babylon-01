@@ -1,6 +1,6 @@
 import { useRef, useCallback } from 'react';
 import type { Scene } from '@babylonjs/core/scene.js';
-import { SelectionProvider } from './context/SelectionContext';
+import { SelectionProvider } from './context/SelectionProvider';
 import { BabylonCanvas } from './components/BabylonCanvas';
 import { SidePanel } from './components/SidePanel';
 import { Toolbar } from './components/Toolbar';

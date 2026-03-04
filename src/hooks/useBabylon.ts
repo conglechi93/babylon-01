@@ -2,8 +2,8 @@ import { useEffect, useRef, useCallback } from 'react';
 import type { Engine, Scene } from '@babylonjs/core';
 import type { HighlightManager } from '../babylon/interactions/highlight';
 import type { SelectionId } from '../types/selection';
-import { createEngine } from '../babylon/engine';
-import { createScene } from '../babylon/sceneFactory';
+import { createEngine } from '../babylon/core/engine';
+import { createScene } from '../babylon/scenes/sceneFactory';
 
 interface UseBabylonOptions {
   onMeshSelected: (selectionId: SelectionId) => void;

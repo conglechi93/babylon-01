@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import type { SelectionId, SelectedEntity } from '../types/selection';
 import { SERVICE_DEFINITIONS } from '../data/serviceDefinitions';
 import { CELESTIAL_DEFINITIONS } from '../data/celestialDefinitions';
-import { SelectionContext } from './selectionContextCore';
+import { SelectionContext } from './SelectionContext';
 
 export function SelectionProvider({ children }: { children: ReactNode }) {
   const [selectionId, setSelectionIdRaw] = useState<SelectionId>(null);

@@ -4,15 +4,15 @@ import { ServiceType } from '../types/services';
 import type { ServiceDefinition } from '../types/services';
 import type { SelectionId } from '../types/selection';
 import { SERVICE_DEFINITIONS } from '../data/serviceDefinitions';
-import { setupCamera } from './camera';
-import { setupLighting } from './lighting';
-import { createGround } from './meshCreators/ground';
-import { createServiceBox } from './meshCreators/serviceBox';
-import { createDatabaseCylinder } from './meshCreators/databaseCylinder';
-import { createMessageQueueTorus } from './meshCreators/messageQueueTorus';
-import { HighlightManager } from './interactions/highlight';
-import { setupRayPicking } from './interactions/rayPicking';
-import { setupIdleRotation } from './animations/rotation';
+import { setupCamera } from '../core/camera';
+import { setupLighting } from '../core/lighting';
+import { createGround } from '../meshCreators/ground';
+import { createServiceBox } from '../meshCreators/serviceBox';
+import { createDatabaseCylinder } from '../meshCreators/databaseCylinder';
+import { createMessageQueueTorus } from '../meshCreators/messageQueueTorus';
+import { HighlightManager } from '../interactions/highlight';
+import { setupRayPicking } from '../interactions/rayPicking';
+import { setupIdleRotation } from '../animations/rotation';
 import { createSolarSystem } from './solarSystemFactory';
 
 function createMeshForService(def: ServiceDefinition, scene: Scene): Mesh {
