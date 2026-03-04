@@ -44,9 +44,12 @@ export function useBabylon(
 
     const handleResize = () => engine.resize();
     window.addEventListener('resize', handleResize);
+    const resizeObserver = new ResizeObserver(() => engine.resize());
+    resizeObserver.observe(canvas);
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
       highlightManager.dispose();
       scene.dispose();
       engine.dispose();
