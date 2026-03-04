@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useSelection } from '../context/useSelection';
 import type { ServiceMetadata } from '../types/services';
 import type { CelestialMetadata } from '../types/celestial';
@@ -90,24 +91,26 @@ function CelestialPanel({ body }: { body: CelestialMetadata }) {
 
 export function SidePanel() {
   const { selectedEntity } = useSelection();
-
-  if (!selectedEntity) {
-    return (
-      <div className={styles.panel}>
-        <div className={styles.placeholder}>
-          <h2>Architecture Viewer</h2>
-          <p>Click on a service or celestial body in the 3D scene to view its details.</p>
-        </div>
-      </div>
-    );
-  }
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className={styles.panel}>
-      {selectedEntity.kind === 'service' ? (
-        <ServicePanel service={selectedEntity.data} />
-      ) : (
-        <CelestialPanel body={selectedEntity.data} />
+    <div className={`${styles.panel} ${collapsed ? styles.panelCollapsed : ''}`}>
+      <button className={styles.collapseBtn} onClick={() => setCollapsed((c) => !c)}>
+        {collapsed ? '◀' : '▶'}
+      </button>
+      {!collapsed && (
+        <>
+          {!selectedEntity ? (
+            <div className={styles.placeholder}>
+              <h2>Architecture Viewer</h2>
+              <p>Click on a service or celestial body in the 3D scene to view its details.</p>
+            </div>
+          ) : selectedEntity.kind === 'service' ? (
+            <ServicePanel service={selectedEntity.data} />
+          ) : (
+            <CelestialPanel body={selectedEntity.data} />
+          )}
+        </>
       )}
     </div>
   );

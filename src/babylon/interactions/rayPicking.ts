@@ -1,4 +1,4 @@
-import { ActionManager, ExecuteCodeAction } from '@babylonjs/core';
+import { ActionManager, ExecuteCodeAction, PointerEventTypes } from '@babylonjs/core';
 import type { Scene, AbstractMesh, Mesh } from '@babylonjs/core';
 import type { HighlightManager } from './highlight';
 import type { SelectionId } from '../../types/selection';
@@ -35,12 +35,24 @@ export function setupRayPicking(
     );
   }
 
-  // Click on empty space to deselect
-  scene.onPointerDown = (_evt, pickResult) => {
-    const picked = pickResult?.pickedMesh;
-    if (!pickResult?.hit || !picked || !selectionIdFromMesh(picked)) {
-      highlightManager.clear();
-      onSelect(null);
+  // Click on empty space to deselect — ignore drags (pointer moved between down and up)
+  let pointerDownPos = { x: 0, y: 0 };
+
+  scene.onPointerObservable.add((pointerInfo) => {
+    if (pointerInfo.type === PointerEventTypes.POINTERDOWN) {
+      pointerDownPos = { x: pointerInfo.event.clientX, y: pointerInfo.event.clientY };
     }
-  };
+    if (pointerInfo.type === PointerEventTypes.POINTERUP) {
+      const dx = pointerInfo.event.clientX - pointerDownPos.x;
+      const dy = pointerInfo.event.clientY - pointerDownPos.y;
+      if (Math.sqrt(dx * dx + dy * dy) > 4) return; // was a drag, not a click
+
+      const pickResult = pointerInfo.pickInfo;
+      const picked = pickResult?.pickedMesh;
+      if (!pickResult?.hit || !picked || !selectionIdFromMesh(picked)) {
+        highlightManager.clear();
+        onSelect(null);
+      }
+    }
+  });
 }
