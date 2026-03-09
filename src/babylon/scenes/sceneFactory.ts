@@ -7,6 +7,7 @@ import { setupLighting } from '../core/lighting';
 import { createGround } from '../meshCreators/ground';
 import { createPrimitiveMesh } from '../meshCreators/primitiveMesh';
 import { HighlightManager } from '../interactions/highlight';
+import { HoverManager } from '../interactions/hover';
 import { setupRayPicking } from '../interactions/rayPicking';
 import { setupMeshAnimations } from '../animations/rotation';
 import { createSolarSystem } from '../meshCreators/solarSystem';
@@ -14,6 +15,7 @@ import { createSolarSystem } from '../meshCreators/solarSystem';
 export interface SceneResult {
   scene: Scene;
   highlightManager: HighlightManager;
+  hoverManager: HoverManager;
 }
 
 export function createScene(
@@ -37,8 +39,9 @@ export function createScene(
   const allPickableMeshes = [...primitiveMeshes, ...solarMeshes];
 
   const highlightManager = new HighlightManager(scene);
+  const hoverManager = new HoverManager(scene, {}, highlightManager);
   setupRayPicking(scene, allPickableMeshes, highlightManager, onSelect);
   setupMeshAnimations(scene, primitiveMeshes, MESH_DEFINITIONS);
 
-  return { scene, highlightManager };
+  return { scene, highlightManager, hoverManager };
 }

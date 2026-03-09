@@ -1,10 +1,10 @@
-# 3D Interactive System Architecture Viewer
+# 3D Solar System Viewer
 
-A 3D visualization of a microservices architecture built with React, TypeScript, and BabylonJS. Click on 3D mesh representations of services to see details in a side panel.
+A 3D interactive solar system built with React, TypeScript, and BabylonJS. Supports clicking to select celestial bodies and primitive meshes, with hover highlighting and a side panel for details.
 
 ## Tech Stack
 
-- **Vite 7** + **React 19** + **TypeScript 5.9**
+- **Vite** + **React 19** + **TypeScript**
 - **@babylonjs/core** + **@babylonjs/inspector** (lazy-loaded)
 - CSS Modules
 
@@ -31,53 +31,70 @@ npm run preview  # preview the production build
 
 ```
 src/
-├── types/services.ts              # ServiceType, ServiceMetadata, ServiceDefinition
-├── data/serviceDefinitions.ts     # 6 static service definitions
-├── babylon/                       # BabylonJS layer (pure functions, no React)
-│   ├── engine.ts                  # Engine with stencil: true
-│   ├── sceneFactory.ts            # Orchestrates scene setup
-│   ├── camera.ts                  # ArcRotateCamera (zoom 5–30)
-│   ├── lighting.ts                # HemisphericLight
+├── types/
+│   ├── celestial.ts           # CelestialType, CelestialMetadata
+│   ├── mesh.ts                # MeshShape, MeshMetadata
+│   └── selection.ts           # SelectionId, SelectedEntity
+├── data/
+│   ├── celestialDefinitions.ts  # Sun, planets, moons definitions
+│   └── meshDefinitions.ts       # Primitive mesh definitions
+├── babylon/                   # BabylonJS layer (pure, no React)
+│   ├── core/
+│   │   ├── engine.ts          # Engine (stencil: true)
+│   │   ├── camera.ts          # ArcRotateCamera
+│   │   └── lighting.ts        # HemisphericLight
+│   ├── scenes/
+│   │   └── sceneFactory.ts    # Orchestrates full scene setup
 │   ├── meshCreators/
-│   │   ├── ground.ts              # Non-pickable ground plane
-│   │   ├── serviceBox.ts          # Box → Microservice
-│   │   ├── databaseCylinder.ts    # Cylinder → Database
-│   │   └── messageQueueTorus.ts   # Torus → Message Queue
+│   │   ├── ground.ts          # Non-pickable ground plane
+│   │   ├── primitiveMesh.ts   # Generic primitive mesh factory
+│   │   ├── sun.ts             # Sun mesh + PointLight
+│   │   ├── planet.ts          # Planet mesh + optional ring
+│   │   ├── solarSystem.ts     # Assembles solar system
+│   │   └── solarGround.ts     # Solar system ground
 │   ├── interactions/
-│   │   ├── highlight.ts           # HighlightLayer glow on selection
-│   │   └── rayPicking.ts          # Click handlers via ActionManager
+│   │   ├── highlight.ts       # HighlightManager — select (white) + hover (cyan)
+│   │   ├── hover.ts           # HoverManager — POINTERMOVE detection
+│   │   └── rayPicking.ts      # Click selection via onPointerObservable
 │   └── animations/
-│       └── rotation.ts            # Slow Y-axis idle spin
+│       ├── rotation.ts        # Idle Y-axis spin + bob
+│       └── orbit.ts           # Orbital motion via pivot TransformNode
 ├── hooks/
-│   ├── useBabylon.ts              # Engine/scene lifecycle + ref-forwarding
-│   └── useInspector.ts            # Lazy-load BabylonJS Inspector
+│   ├── useBabylon.ts          # Engine/scene lifecycle + ref-forwarding
+│   └── useInspector.ts        # Lazy-load BabylonJS Inspector
 ├── context/
-│   └── SelectionContext.tsx        # Selected service state
-├── components/
-│   ├── BabylonCanvas.tsx           # <canvas> + useBabylon
-│   ├── SidePanel.tsx               # Service details panel
-│   └── Toolbar.tsx                 # Inspector toggle
-├── App.tsx                         # Layout: viewport + side panel
-├── main.tsx                        # Entry point
-├── index.css                       # Global reset
-└── App.css                         # Layout styles
+│   ├── SelectionContext.ts    # React context for selection state
+│   └── useSelection.ts        # Hook to consume SelectionContext
+├── App.tsx                    # Layout: canvas + side panel
+└── main.tsx                   # Entry point
 ```
 
-## Services
+## Interactions
 
-| Service            | Shape    | Color  | Status  |
-|--------------------|----------|--------|---------|
-| API Gateway        | Box      | Blue   | Healthy |
-| Auth Service       | Box      | Green  | Healthy |
-| User Service       | Box      | Orange | Healthy |
-| Order Service      | Box      | Red    | Degraded|
-| PostgreSQL DB      | Cylinder | Purple | Healthy |
-| RabbitMQ Event Bus | Torus    | Pink   | Healthy |
+| Action | Result |
+|---|---|
+| **Drag** mouse | Orbit camera |
+| **Scroll** | Zoom in / out |
+| **Hover** mesh | Cyan glow highlight |
+| **Click** mesh | White glow + details in side panel |
+| **Click** empty space | Deselect |
+| **"Show Inspector"** button | Toggle BabylonJS Inspector |
 
-## Usage
+## Architecture Notes
 
-- **Orbit**: drag with mouse
-- **Zoom**: scroll (limited 5–30 units)
-- **Select service**: click a mesh → white glow + details in side panel
-- **Deselect**: click empty space
-- **Inspector**: click "Show Inspector" button (top-left)
+### Interaction System
+
+- **`rayPicking.ts`** — handles `POINTERDOWN` + `POINTERUP` for click-to-select. Babylon auto-populates `pickInfo` for these events.
+- **`hover.ts`** — handles `POINTERMOVE`. Babylon does **not** auto-pick on move, so `scene.pick()` is called manually. Fires `onHoverEnter` / `onHoverLeave` callbacks and delegates visual feedback to `HighlightManager`.
+- **`highlight.ts`** — manages a single `HighlightLayer` with two independent states: `select` (white glow) and `hover` (cyan glow).
+
+### Mesh Metadata
+
+Every pickable mesh carries a `metadata` object used to identify it:
+
+```ts
+mesh.metadata = { meshId: 'box-1' };       // primitive mesh
+mesh.metadata = { celestialId: 'earth' };  // celestial body
+```
+
+`SelectionId` resolves to `{ kind: 'mesh' | 'celestial', id: string } | null`.
