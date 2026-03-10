@@ -5,7 +5,7 @@ import { BabylonCanvas } from './components/BabylonCanvas';
 import { SidePanel } from './components/SidePanel';
 import { Toolbar } from './components/Toolbar';
 import { useInspector } from './hooks/useInspector';
-import type { CameraMode } from './babylon/core/multiCamera';
+import type { CameraMode } from './babylon/core/camera';
 import './App.css';
 
 function AppInner() {

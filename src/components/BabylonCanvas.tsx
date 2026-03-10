@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useBabylon } from '../hooks/useBabylon';
 import { useSelection } from '../context/useSelection';
-import type { CameraMode } from '../babylon/core/multiCamera';
+import type { CameraMode } from '../babylon/core/camera';
 import styles from './BabylonCanvas.module.css';
 
 interface BabylonCanvasProps {

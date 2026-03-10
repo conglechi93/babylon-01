@@ -2,7 +2,7 @@ import { Scene } from '@babylonjs/core';
 import type { Engine, Mesh } from '@babylonjs/core';
 import type { SelectionId } from '../../types/selection';
 import { MESH_DEFINITIONS } from '../../data/meshDefinitions';
-import { CameraManager } from '../core/multiCamera';
+import { CameraManager } from '../core/camera';
 import { setupLighting } from '../core/lighting';
 import { createGround } from '../meshCreators/ground';
 import { createPrimitiveMesh } from '../meshCreators/primitiveMesh';

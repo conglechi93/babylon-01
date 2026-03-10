@@ -1,4 +1,4 @@
-import type { CameraMode } from '../babylon/core/multiCamera';
+import type { CameraMode } from '../babylon/core/camera';
 import styles from './Toolbar.module.css';
 
 interface ToolbarProps {
