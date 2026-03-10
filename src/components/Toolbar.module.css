@@ -3,6 +3,21 @@
   bottom: 12px;
   left: 12px;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.group {
+  display: flex;
+  gap: 4px;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: #444;
+  margin: 0 2px;
 }
 
 .button {
@@ -17,5 +32,11 @@
 
 .button:hover {
   background: rgba(50, 50, 80, 0.9);
+  color: #fff;
+}
+
+.button.active {
+  background: rgba(80, 80, 160, 0.9);
+  border-color: #7878cc;
   color: #fff;
 }

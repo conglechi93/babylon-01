@@ -2,7 +2,7 @@ import { Scene } from '@babylonjs/core';
 import type { Engine, Mesh } from '@babylonjs/core';
 import type { SelectionId } from '../../types/selection';
 import { MESH_DEFINITIONS } from '../../data/meshDefinitions';
-import { setupCamera } from '../core/camera';
+import { CameraManager } from '../core/multiCamera';
 import { setupLighting } from '../core/lighting';
 import { createGround } from '../meshCreators/ground';
 import { createPrimitiveMesh } from '../meshCreators/primitiveMesh';
@@ -16,6 +16,7 @@ export interface SceneResult {
   scene: Scene;
   highlightManager: HighlightManager;
   hoverManager: HoverManager;
+  cameraManager: CameraManager;
 }
 
 export function createScene(
@@ -26,7 +27,7 @@ export function createScene(
   const scene = new Scene(engine);
   scene.clearColor.set(0.08, 0.08, 0.12, 1);
 
-  setupCamera(scene, canvas);
+  const cameraManager = new CameraManager(scene, canvas);
   setupLighting(scene);
   createGround(scene);
 
@@ -35,13 +36,20 @@ export function createScene(
   );
 
   const { pickableMeshes: solarMeshes } = createSolarSystem(scene);
-
   const allPickableMeshes = [...primitiveMeshes, ...solarMeshes];
 
   const highlightManager = new HighlightManager(scene);
   const hoverManager = new HoverManager(scene, {}, highlightManager);
-  setupRayPicking(scene, allPickableMeshes, highlightManager, onSelect);
+
+  setupRayPicking(
+    scene,
+    allPickableMeshes,
+    highlightManager,
+    onSelect,
+    (mesh) => cameraManager.setFollowTarget(mesh),
+  );
+
   setupMeshAnimations(scene, primitiveMeshes, MESH_DEFINITIONS);
 
-  return { scene, highlightManager, hoverManager };
+  return { scene, highlightManager, hoverManager, cameraManager };
 }

@@ -13,14 +13,27 @@ function selectionIdFromMesh(mesh: AbstractMesh): SelectionId {
   return null;
 }
 
-// Previous implementation: rayPicking.old.ts
-// NEW: Single onPointerObservable handles both select and deselect.
-// One entry point, linear logic — no risk of double-fire.
+/**
+ * Registers pointer-based mesh selection on the scene.
+ *
+ * Uses a single onPointerObservable handler for both select and deselect so
+ * there is one clear code path and no risk of duplicate events.
+ *
+ * Drag detection: a POINTERUP is treated as a click only when the pointer
+ * moved less than 4 px (distSq ≤ 16) since POINTERDOWN. This prevents
+ * accidental selection at the end of a camera drag.
+ *
+ * @param onMeshPicked  Optional callback receiving the raw AbstractMesh on
+ *   each successful pick. Kept separate from onSelect so callers (e.g.
+ *   CameraManager) get the mesh reference directly without a getMeshByName
+ *   lookup. Not called on a miss — callers retain the last valid target.
+ */
 export function setupRayPicking(
   scene: Scene,
   _meshes: Mesh[],
   highlightManager: HighlightManager,
   onSelect: (selectionId: SelectionId) => void,
+  onMeshPicked?: (mesh: AbstractMesh | null) => void,
 ): void {
   let pointerDownPos = { x: 0, y: 0 };
 
@@ -33,7 +46,7 @@ export function setupRayPicking(
       case PointerEventTypes.POINTERUP: {
         const dx = pointerInfo.event.clientX - pointerDownPos.x;
         const dy = pointerInfo.event.clientY - pointerDownPos.y;
-        if (dx * dx + dy * dy > 16) return; // was a drag, not a click
+        if (dx * dx + dy * dy > 16) return;
 
         const picked = pointerInfo.pickInfo?.pickedMesh;
         const id = picked ? selectionIdFromMesh(picked) : null;
@@ -41,6 +54,7 @@ export function setupRayPicking(
         if (id) {
           highlightManager.select(picked as Mesh);
           onSelect(id);
+          onMeshPicked?.(picked ?? null);
         } else {
           highlightManager.clear();
           onSelect(null);
