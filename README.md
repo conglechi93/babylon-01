@@ -57,8 +57,8 @@ src/
 │   │   ├── hover.ts           # HoverManager — POINTERMOVE detection
 │   │   └── rayPicking.ts      # Click selection via onPointerObservable
 │   └── animations/
-│       ├── rotation.ts        # Idle Y-axis spin + bob
-│       └── orbit.ts           # Orbital motion via pivot TransformNode
+│       ├── rotation.ts        # Self-rotation (X/Y/Z) + vertical bob — áp dụng cho primitive meshes
+│       └── orbit.ts           # Orbital revolution qua parent pivot — planets quay quanh sun
 ├── hooks/
 │   ├── useBabylon.ts          # Engine/scene lifecycle + ref-forwarding
 │   └── useInspector.ts        # Lazy-load BabylonJS Inspector
@@ -87,6 +87,23 @@ src/
 - **`rayPicking.ts`** — handles `POINTERDOWN` + `POINTERUP` for click-to-select. Babylon auto-populates `pickInfo` for these events.
 - **`hover.ts`** — handles `POINTERMOVE`. Babylon does **not** auto-pick on move, so `scene.pick()` is called manually. Fires `onHoverEnter` / `onHoverLeave` callbacks and delegates visual feedback to `HighlightManager`.
 - **`highlight.ts`** — manages a single `HighlightLayer` with two independent states: `select` (white glow) and `hover` (cyan glow).
+
+### Animation System
+
+Có 2 loại chuyển động độc lập:
+
+**`rotation.ts` — self-rotation + bob** (primitive meshes)
+Mỗi mesh quay quanh trục của chính nó và/hoặc nhún lên xuống theo sóng sin. Config được lấy từ `MeshMetadata.animation`:
+```ts
+mesh.rotation.y += anim.rotationY * delta;  // tự quay theo trục Y
+mesh.position.y = baseY + sin(t) * bobY;    // nhún lên xuống
+```
+
+**`orbit.ts` — orbital revolution** (planets/moons)
+Planet được gắn vào một `TransformNode` (pivot) vô hình đặt tại tâm orbit. Khi pivot xoay, planet di chuyển theo đường tròn xung quanh sun:
+```ts
+pivot.rotation.y += speed * delta;  // quay pivot → planet orbit theo
+```
 
 ### Mesh Metadata
 

@@ -42,7 +42,6 @@ export class HoverManager {
 
       // POINTERMOVE không tự pick — phải gọi thủ công
       const pickResult = this.scene.pick(this.scene.pointerX, this.scene.pointerY);
-      console.log('HoverManager: Pointer moved, pick result:', pickResult);
       const pickedMesh = pickResult?.hit ? (pickResult.pickedMesh as Mesh) : null;
 
       // Không có gì thay đổi, bỏ qua
