@@ -4,37 +4,65 @@ import {
   Color3,
   PointLight,
   Vector3,
-  GlowLayer,
 } from '@babylonjs/core';
 import type { Scene, Mesh } from '@babylonjs/core';
 import type { CelestialDefinition } from '../../types/celestial';
+import { applySunMaterial } from '../materials/sunMaterial';
+import { calcSunRadius, getSpectralClass, SPECTRAL_COLOR } from '../../simulation/physics';
+
+export interface SunApi {
+  /** Scale the sun mesh and update colour for a new stellar mass (in M☉). */
+  setMass: (massSolar: number) => void;
+}
 
 export function createSun(
   def: CelestialDefinition,
   centerX: number,
   scene: Scene,
-): { mesh: Mesh; light: PointLight } {
-  const sphere = CreateSphere(def.metadata.id, { diameter: def.visualRadius * 2, segments: 32 }, scene);
-  sphere.position.set(centerX, def.visualRadius, 0);
+): { mesh: Mesh; light: PointLight; sunApi: SunApi } {
+  const sphere = CreateSphere(def.metadata.id, {
+    diameter: def.visualRadius * 2,
+    segments: 32,
+  }, scene);
 
-  const mat = new StandardMaterial(`${def.metadata.id}-mat`, scene);
-  mat.emissiveColor = Color3.FromHexString(def.color);
-  mat.diffuseColor = Color3.FromHexString(def.color);
-  mat.specularColor = new Color3(0, 0, 0);
-  sphere.material = mat;
+  // Sun sits at the orbital plane (y = 0), same level as all planets
+  sphere.position.set(centerX, 0, 0);
+
+  const tempMat = new StandardMaterial(`${def.metadata.id}-temp`, scene);
+  tempMat.emissiveColor = Color3.FromHexString(def.color);
+  sphere.material = tempMat;
 
   sphere.metadata = { celestialId: def.metadata.id };
 
-  // Point light emanating from the sun
-  const light = new PointLight(`${def.metadata.id}-light`, new Vector3(centerX, def.visualRadius, 0), scene);
-  light.intensity = 1.5;
-  light.range = 50;
-  light.diffuse = Color3.FromHexString('#FFF5E0');
+  // Animated surface texture + glow + corona halo
+  const sunMatApi = applySunMaterial(sphere, scene, def.visualRadius);
 
-  // Glow effect for the sun only
-  const glowLayer = new GlowLayer('sunGlow', scene, { mainTextureSamples: 4 });
-  glowLayer.intensity = 0.8;
-  glowLayer.addIncludedOnlyMesh(sphere);
+  // Point light at the sun's world position
+  const light = new PointLight(
+    `${def.metadata.id}-light`,
+    new Vector3(centerX, 0, 0),
+    scene,
+  );
+  light.intensity = 2.2;
+  light.range     = 200;
+  light.diffuse   = Color3.FromHexString('#FFF8EC');
 
-  return { mesh: sphere, light };
+  const sunApi: SunApi = {
+    setMass(massSolar: number) {
+      // Rescale mesh (visual radius ∝ R_star ∝ M^0.8)
+      const radiusScale = calcSunRadius(massSolar);
+      sphere.scaling.setAll(radiusScale);
+
+      // Update point light intensity (L ∝ M^3.5 → capped to avoid blow-out)
+      const lum = Math.pow(Math.max(massSolar, 0.01), 3.5);
+      light.intensity = Math.min(1.0 + lum * 0.5, 8);
+
+      // Tint surface + corona to spectral class colour
+      const spectral = getSpectralClass(massSolar);
+      const hexColor = SPECTRAL_COLOR[spectral];
+      sunMatApi.setSpectralColor(hexColor);
+    },
+  };
+
+  return { mesh: sphere, light, sunApi };
 }

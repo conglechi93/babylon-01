@@ -10,14 +10,50 @@
   outline: none;
 }
 
-/* ── Quad overlay ─────────────────────────────────────────────────────────── */
+/* ── Follow cam overlay (single mode only) ───────────────────────────────── */
+/* Matches BJS viewport: left=70%, bottom=2%, width=28%, height=34% */
+
+.followBorder {
+  position: absolute;
+  right: 2%;
+  bottom: 2%;
+  width: 28%;
+  height: 34%;
+  border: 1px solid rgba(120, 120, 200, 0.45);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.followLabel {
+  position: absolute;
+  right: calc(2% + 6px);
+  bottom: calc(36% + 4px);
+  font-size: 0.65rem;
+  color: rgba(150, 150, 220, 0.8);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  pointer-events: none;
+  background: rgba(10, 10, 20, 0.6);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.followHint {
+  position: absolute;
+  right: calc(2% + 6px);
+  bottom: calc(2% + 6px);
+  font-size: 0.62rem;
+  color: rgba(120, 120, 160, 0.6);
+  pointer-events: none;
+}
+
+
 .quadOverlay {
   position: absolute;
   inset: 0;
-  pointer-events: none; /* không chặn click xuống canvas */
+  pointer-events: none;
 }
 
-/* Đường kẻ ngang và dọc chia 4 ô */
 .crossH {
   position: absolute;
   top: 50%;
@@ -36,7 +72,6 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* Nhãn tên viewport */
 .label {
   position: absolute;
   font-size: 0.7rem;
@@ -48,49 +83,8 @@
   border-radius: 4px;
 }
 
-/* BabylonJS Viewport: bottom-left origin.
-   Nhưng CSS dùng top-left origin nên cần đảo top/bottom */
 .topLeft     { top: 8px;    left: 8px; }
 .topRight    { top: 8px;    right: 8px; }
 .bottomLeft  { bottom: 8px; left: 8px; }
 .bottomRight { bottom: 8px; right: 8px; }
 
-/* ── PiP overlay ──────────────────────────────────────────────────────────── */
-
-/* Viền khung của PiP window (khớp viewport 70%..98% × 2%..36%) */
-.pipBorder {
-  position: absolute;
-  right: 2%;
-  bottom: 2%;
-  width: 28%;
-  height: 34%;
-  border: 1px solid rgba(120, 120, 200, 0.5);
-  border-radius: 4px;
-  pointer-events: none;
-}
-
-.pipLabel {
-  position: absolute;
-  right: calc(2% + 6px);
-  bottom: calc(36% + 4px);
-  font-size: 0.65rem;
-  color: rgba(150, 150, 220, 0.8);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  pointer-events: none;
-  background: rgba(10, 10, 20, 0.6);
-  padding: 2px 6px;
-  border-radius: 3px;
-}
-
-.pipHint {
-  position: absolute;
-  right: calc(2% + 6px);
-  bottom: calc(2% + 6px);
-  font-size: 0.62rem;
-  color: rgba(120, 120, 160, 0.65);
-  pointer-events: none;
-  max-width: 26%;
-  text-align: right;
-  line-height: 1.4;
-}

@@ -1,9 +1,9 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useBabylon } from '../hooks/useBabylon';
 import { useSelection } from '../context/useSelection';
+import { useSimulation } from '../simulation/SimulationContext';
 import type { CameraMode } from '../babylon/core/camera';
 import styles from './BabylonCanvas.module.css';
-
 interface BabylonCanvasProps {
   cameraMode: CameraMode;
   onGetScene?: (getScene: () => ReturnType<typeof useBabylon>['getScene']) => void;
@@ -12,39 +12,60 @@ interface BabylonCanvasProps {
 
 export function BabylonCanvas({ cameraMode, onGetScene, onGetSetCameraMode }: BabylonCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { setSelectionId } = useSelection();
+  const { setSelectionId, selectedEntity } = useSelection();
 
-  const { getScene, setCameraMode } = useBabylon(canvasRef, {
+  const { getScene, setCameraMode, getSolarSystemApi } = useBabylon(canvasRef, {
     onMeshSelected: setSelectionId,
   });
 
-  // Expose getScene lên App để inspector dùng
-  if (onGetScene) {
-    onGetScene(() => getScene);
-  }
+  if (onGetScene)         onGetScene(() => getScene);
+  if (onGetSetCameraMode) onGetSetCameraMode(setCameraMode);
 
-  // Expose setCameraMode lên App để Toolbar gọi được
-  if (onGetSetCameraMode) {
-    onGetSetCameraMode(setCameraMode);
-  }
+  // ── Bridge: simulation state → Babylon ───────────────────────────────────
+  const {
+    earthOrbitAU,
+    luminosity,
+    planetState,
+    timeScale,
+    paused,
+    sunMassSolar,
+  } = useSimulation();
+
+  useEffect(() => {
+    const apply = () => {
+      const api = getSolarSystemApi();
+      if (!api) return false;
+      api.setEarthOrbitAU(earthOrbitAU);
+      api.setHabitableZoneScale(Math.sqrt(luminosity));
+      api.setEarthTemperatureState(planetState);
+      api.setTimeScale(timeScale);
+      api.setPaused(paused);
+      api.setSunMass(sunMassSolar);
+      return true;
+    };
+
+    // Try immediately; if Babylon isn't ready yet, poll until it is
+    if (!apply()) {
+      const id = setInterval(() => { if (apply()) clearInterval(id); }, 80);
+      return () => clearInterval(id);
+    }
+  }, [earthOrbitAU, luminosity, planetState, timeScale, paused, sunMassSolar, getSolarSystemApi]);
 
   return (
     <div className={styles.wrapper}>
-      {/* Canvas BabylonJS */}
-      <canvas
-        ref={canvasRef}
-        className={styles.canvas}
-        touch-action="none"
-      />
+      <canvas ref={canvasRef} className={styles.canvas} touch-action="none" />
 
-      {/* ── Quad view overlay ────────────────────────────────────────────────── */}
+      {cameraMode === 'single' && selectedEntity && (
+        <>
+          <div className={styles.followBorder} />
+          <span className={styles.followLabel}>Follow Cam</span>
+        </>
+      )}
+
       {cameraMode === 'quad' && (
         <div className={styles.quadOverlay}>
-          {/* Đường kẻ chia màn hình */}
           <div className={styles.crossH} />
           <div className={styles.crossV} />
-
-          {/* Nhãn tên từng viewport — khớp với thứ tự viewport trong CameraManager */}
           <span className={`${styles.label} ${styles.topLeft}`}>Perspective</span>
           <span className={`${styles.label} ${styles.topRight}`}>Top (Y+)</span>
           <span className={`${styles.label} ${styles.bottomLeft}`}>Front (Z+)</span>
@@ -52,15 +73,6 @@ export function BabylonCanvas({ cameraMode, onGetScene, onGetSetCameraMode }: Ba
         </div>
       )}
 
-      {/* ── PiP overlay ──────────────────────────────────────────────────────── */}
-      {cameraMode === 'pip' && (
-        <>
-          {/* Viền + nhãn của PiP window — kích thước khớp viewport 28%×34% */}
-          <div className={styles.pipBorder} />
-          <span className={styles.pipLabel}>Follow Cam</span>
-          <span className={styles.pipHint}>Click mesh để follow camera bám theo</span>
-        </>
-      )}
     </div>
   );
 }

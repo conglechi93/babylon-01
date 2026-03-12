@@ -11,7 +11,6 @@ interface ToolbarProps {
 const CAMERA_MODES: { mode: CameraMode; label: string; title: string }[] = [
   { mode: 'single', label: '⬜ Single',  title: '1 camera — toàn màn hình' },
   { mode: 'quad',   label: '⊞ Quad',    title: '4 camera — Perspective / Top / Front / Side' },
-  { mode: 'pip',    label: '⧉ PiP',     title: 'Follow camera nhỏ ở góc — bám theo mesh được chọn' },
 ];
 
 export function Toolbar({

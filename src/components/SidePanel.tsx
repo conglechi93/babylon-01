@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSelection } from '../context/useSelection';
 import type { MeshMetadata } from '../types/mesh';
 import type { CelestialMetadata } from '../types/celestial';
+import { SimulationPanel } from './SimulationPanel';
 import styles from './SidePanel.module.css';
 
 function MeshPanel({ mesh }: { mesh: MeshMetadata }) {
@@ -80,8 +81,10 @@ export function SidePanel() {
       <button className={styles.collapseBtn} onClick={() => setCollapsed((c) => !c)}>
         {collapsed ? '◀' : '▶'}
       </button>
+
       {!collapsed && (
         <>
+          {/* ── Selected entity info ─────────────────────────────────────── */}
           {!selectedEntity ? (
             <div className={styles.placeholder}>
               <h2>Scene Viewer</h2>
@@ -92,6 +95,12 @@ export function SidePanel() {
           ) : (
             <CelestialPanel body={selectedEntity.data} />
           )}
+
+          {/* ── Universe Sandbox: chỉ hiện khi chọn Sun hoặc Earth ─────── */}
+          {selectedEntity?.kind === 'celestial' &&
+            (selectedEntity.data.id === 'sun' || selectedEntity.data.id === 'earth') && (
+              <SimulationPanel />
+            )}
         </>
       )}
     </div>

@@ -1,0 +1,233 @@
+.container {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #2a2a4a;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #e8e8ff;
+  margin: 0 0 18px;
+}
+
+.titleIcon {
+  font-size: 1.1rem;
+}
+
+/* ── Controls ──────────────────────────────────────────────────────────────── */
+.control {
+  margin-bottom: 18px;
+}
+
+.controlHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.controlLabel {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #8888aa;
+}
+
+.controlValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #c8c8ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #3a3a6a, #5a5aaa);
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #7c7cff;
+  box-shadow: 0 0 6px #7c7cff88;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: #aaaaff;
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: #7c7cff;
+  cursor: pointer;
+}
+
+.controlFooter {
+  margin-top: 5px;
+  font-size: 0.75rem;
+  color: #777799;
+}
+
+.controlFooter strong {
+  color: #aaaadd;
+}
+
+/* ── Spectral class badge ───────────────────────────────────────────────── */
+.spectralCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 228, 184, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  margin-bottom: 18px;
+}
+
+.spectralDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.spectralInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.spectralLabel {
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.spectralDesc {
+  font-size: 0.72rem;
+  color: #777799;
+}
+
+/* ── Temperature card ──────────────────────────────────────────────────────── */
+.tempCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #4caf50;
+  background: rgba(255, 255, 255, 0.04);
+  margin-bottom: 18px;
+}
+
+.tempEmoji {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.tempInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tempState {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.tempValue {
+  font-size: 0.8rem;
+  color: #aaaacc;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Habitable Zone bar ────────────────────────────────────────────────────── */
+.hz {
+  margin-bottom: 16px;
+}
+
+.hzHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  color: #8888aa;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hzRange {
+  font-variant-numeric: tabular-nums;
+  color: #66bb6a;
+}
+
+.hzBarWrap {
+  position: relative;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 5px;
+  overflow: visible;
+  margin-bottom: 4px;
+}
+
+.hzBand {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: rgba(76, 175, 80, 0.35);
+  border-radius: 5px;
+  border: 1px solid rgba(76, 175, 80, 0.6);
+}
+
+.earthMarker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.earthDot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #4a90d9;
+  border: 2px solid #fff;
+  box-shadow: 0 0 6px #4a90d988;
+}
+
+.hzTicks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: #555577;
+  margin-top: 2px;
+}
+
+/* ── Hint ──────────────────────────────────────────────────────────────────── */
+.hint {
+  font-size: 0.72rem;
+  color: #555577;
+  line-height: 1.55;
+  margin: 0;
+  padding-top: 4px;
+}

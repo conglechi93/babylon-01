@@ -3,6 +3,7 @@ import type { Engine, Scene } from '@babylonjs/core';
 import type { HighlightManager } from '../babylon/interactions/highlight';
 import type { CameraMode, CameraManager } from '../babylon/core/camera';
 import type { SelectionId } from '../types/selection';
+import type { SolarSystemApi } from '../babylon/meshCreators/solarSystem';
 import { createEngine } from '../babylon/core/engine';
 import { createScene } from '../babylon/scenes/sceneFactory';
 
@@ -14,19 +15,18 @@ export function useBabylon(
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   options: UseBabylonOptions,
 ) {
-  const engineRef = useRef<Engine | null>(null);
-  const sceneRef = useRef<Scene | null>(null);
-  const highlightRef = useRef<HighlightManager | null>(null);
+  const engineRef        = useRef<Engine | null>(null);
+  const sceneRef         = useRef<Scene | null>(null);
+  const highlightRef     = useRef<HighlightManager | null>(null);
   const cameraManagerRef = useRef<CameraManager | null>(null);
+  const solarApiRef      = useRef<SolarSystemApi | null>(null);
 
-  // Keep a ref to the latest callback so the scene never needs to be recreated
-  // when the parent component re-renders with a new handler reference.
   const onSelectRef = useRef(options.onMeshSelected);
-  useEffect(() => {
-    onSelectRef.current = options.onMeshSelected;
-  });
+  useEffect(() => { onSelectRef.current = options.onMeshSelected; });
 
-  const getScene = useCallback(() => sceneRef.current, []);
+  const getScene           = useCallback(() => sceneRef.current, []);
+  const getCameraMode      = useCallback(() => cameraManagerRef.current, []);
+  const getSolarSystemApi  = useCallback(() => solarApiRef.current, []);
 
   const setCameraMode = useCallback((mode: CameraMode) => {
     cameraManagerRef.current?.setMode(mode);
@@ -39,15 +39,13 @@ export function useBabylon(
     const engine = createEngine(canvas);
     engineRef.current = engine;
 
-    const { scene, highlightManager, hoverManager, cameraManager } = createScene(
-      engine,
-      canvas,
-      (selectionId) => onSelectRef.current(selectionId),
-    );
+    const { scene, highlightManager, hoverManager, cameraManager, solarSystemApi } =
+      createScene(engine, canvas, (id) => onSelectRef.current(id));
 
-    sceneRef.current = scene;
-    highlightRef.current = highlightManager;
-    cameraManagerRef.current = cameraManager;
+    sceneRef.current        = scene;
+    highlightRef.current    = highlightManager;
+    cameraManagerRef.current= cameraManager;
+    solarApiRef.current     = solarSystemApi;
 
     engine.runRenderLoop(() => scene.render());
 
@@ -64,12 +62,13 @@ export function useBabylon(
       cameraManager.dispose();
       scene.dispose();
       engine.dispose();
-      engineRef.current = null;
-      sceneRef.current = null;
-      highlightRef.current = null;
+      engineRef.current        = null;
+      sceneRef.current         = null;
+      highlightRef.current     = null;
       cameraManagerRef.current = null;
+      solarApiRef.current      = null;
     };
   }, [canvasRef]);
 
-  return { getScene, setCameraMode };
+  return { getScene, setCameraMode, getCameraMode, getSolarSystemApi };
 }

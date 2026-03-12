@@ -58,6 +58,7 @@ export function setupRayPicking(
         } else {
           highlightManager.clear();
           onSelect(null);
+          onMeshPicked?.(null);
         }
         break;
       }

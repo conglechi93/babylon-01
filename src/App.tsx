@@ -1,32 +1,27 @@
 import { useRef, useCallback, useState } from 'react';
 import type { Scene } from '@babylonjs/core/scene.js';
+import { SimulationProvider } from './simulation/SimulationProvider';
 import { SelectionProvider } from './context/SelectionProvider';
 import { BabylonCanvas } from './components/BabylonCanvas';
 import { SidePanel } from './components/SidePanel';
 import { Toolbar } from './components/Toolbar';
+import { TimeControlBar } from './components/TimeControlBar';
 import { useInspector } from './hooks/useInspector';
 import type { CameraMode } from './babylon/core/camera';
 import './App.css';
 
 function AppInner() {
-  const getSceneRef = useRef<() => Scene | null>(() => null);
-  const setCameraModeRef = useRef<(mode: CameraMode) => void>(() => {});
-
-  // cameraMode là React state để Toolbar biết button nào đang active
+  const getSceneRef        = useRef<() => Scene | null>(() => null);
+  const setCameraModeRef   = useRef<(mode: CameraMode) => void>(() => {});
   const [cameraMode, setCameraMode] = useState<CameraMode>('single');
 
   const handleGetScene = useCallback(
-    (getter: () => () => Scene | null) => {
-      getSceneRef.current = getter();
-    },
+    (getter: () => () => Scene | null) => { getSceneRef.current = getter(); },
     [],
   );
 
-  // BabylonCanvas expose hàm setCameraMode của useBabylon lên đây
   const handleGetSetCameraMode = useCallback(
-    (setter: (mode: CameraMode) => void) => {
-      setCameraModeRef.current = setter;
-    },
+    (setter: (mode: CameraMode) => void) => { setCameraModeRef.current = setter; },
     [],
   );
 
@@ -34,10 +29,9 @@ function AppInner() {
     () => getSceneRef.current(),
   );
 
-  // Đây là handler duy nhất cho camera mode — sync cả React state lẫn Babylon
   const handleSetCameraMode = useCallback((mode: CameraMode) => {
-    setCameraMode(mode);           // React re-render → Toolbar + overlay cập nhật
-    setCameraModeRef.current(mode); // Babylon bên trong canvas thực sự chuyển camera
+    setCameraMode(mode);
+    setCameraModeRef.current(mode);
   }, []);
 
   return (
@@ -54,6 +48,7 @@ function AppInner() {
           onGetScene={handleGetScene}
           onGetSetCameraMode={handleGetSetCameraMode}
         />
+        <TimeControlBar />
       </div>
       <SidePanel />
     </div>
@@ -62,8 +57,10 @@ function AppInner() {
 
 export default function App() {
   return (
-    <SelectionProvider>
-      <AppInner />
-    </SelectionProvider>
+    <SimulationProvider>
+      <SelectionProvider>
+        <AppInner />
+      </SelectionProvider>
+    </SimulationProvider>
   );
 }
